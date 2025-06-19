@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Завантажувач фото</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Завантаження фото зі сторінки</h1>
+    <div class="input-area">
+      <input type="text" id="urlInput" placeholder="Вставте посилання на сторінку...">
+      <button id="fetchBtn">Отримати фото</button>
+    </div>
+
+    <div id="gallery" class="gallery"></div>
+  </div>
+
+  <div id="previewModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="previewImage">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
