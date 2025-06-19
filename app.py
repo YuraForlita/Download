@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify, Response
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse, unquote
 from PIL import Image
 import requests
 from io import BytesIO
 import os
 from flask_cors import CORS
+import re
 
 app = Flask(__name__)
 CORS(app)  # Дозволяємо CORS, щоб фронтенд міг робити запити
@@ -44,20 +45,38 @@ def fetch_images():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+def get_filename_from_url(url):
+    path = urlparse(url).path
+    filename = os.path.basename(path)
+    filename = unquote(filename)
+    if not filename or '.' not in filename:
+        filename = 'image.jpg'
+    # Замінюємо символи, які можуть бути проблемними у імені файлу
+    filename = re.sub(r'[^\w\-.]', '_', filename)
+    return filename
+
+
 @app.route('/api/download')
 def download_image():
     img_url = request.args.get('url')
     if not img_url:
         return jsonify({'error': 'Missing url parameter'}), 400
     try:
-        resp = requests.get(img_url, stream=True)
+        headers_req = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+            # 'Referer': 'https://example.com/'  # за потреби додай реферер
+        }
+        resp = requests.get(img_url, headers=headers_req, stream=True, timeout=10)
         resp.raise_for_status()
-        filename = img_url.split('/')[-1].split('?')[0] or 'image.jpg'
-        headers = {
+
+        filename = get_filename_from_url(img_url)
+
+        response_headers = {
             'Content-Disposition': f'attachment; filename="{filename}"',
             'Content-Type': resp.headers.get('Content-Type', 'application/octet-stream')
         }
-        return Response(resp.content, headers=headers)
+        return Response(resp.content, headers=response_headers)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
