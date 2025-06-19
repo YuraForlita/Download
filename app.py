@@ -5,7 +5,10 @@ from PIL import Image
 import requests
 from io import BytesIO
 import os
+from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app)
 app = Flask(__name__)
 
 def is_valid_image(url):
