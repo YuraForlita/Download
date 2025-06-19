@@ -55,8 +55,8 @@ function renderImages(images) {
     downloadBtn.textContent = "Скачати";
     downloadBtn.onclick = () => {
       const a = document.createElement("a");
-      a.href = imgUrl;
-      a.download = "";
+      a.href = `/api/download?url=${encodeURIComponent(imgUrl)}`;
+      a.download = '';  // Ім'я файлу сервер додасть у заголовку
       a.click();
     };
 

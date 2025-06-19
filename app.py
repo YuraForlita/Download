@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from PIL import Image
@@ -41,6 +41,23 @@ def fetch_images():
 
         return jsonify(image_urls)
 
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/download')
+def download_image():
+    img_url = request.args.get('url')
+    if not img_url:
+        return jsonify({'error': 'Missing url parameter'}), 400
+    try:
+        resp = requests.get(img_url, stream=True)
+        resp.raise_for_status()
+        filename = img_url.split('/')[-1].split('?')[0] or 'image.jpg'
+        headers = {
+            'Content-Disposition': f'attachment; filename="{filename}"',
+            'Content-Type': resp.headers.get('Content-Type', 'application/octet-stream')
+        }
+        return Response(resp.content, headers=headers)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
