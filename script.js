@@ -17,7 +17,7 @@ fetchBtn.addEventListener("click", async () => {
   gallery.innerHTML = "Завантаження...";
 
   try {
-    const response = await fetch("/api/fetch-images", {
+    const response = await fetch("https://download-ze8s.onrender.com/api/fetch-images", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url })
