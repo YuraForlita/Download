@@ -8,8 +8,7 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
-app = Flask(__name__)
+CORS(app)  # Дозволяємо CORS, щоб фронтенд міг робити запити
 
 def is_valid_image(url):
     try:
