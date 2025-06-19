@@ -56,8 +56,10 @@ function renderImages(images) {
     downloadBtn.onclick = () => {
       const a = document.createElement("a");
       a.href = `/api/download?url=${encodeURIComponent(imgUrl)}`;
-      a.download = '';  // Ім'я файлу сервер додасть у заголовку
+      a.download = '';  // ім'я файлу сервер задасть
+      document.body.appendChild(a);
       a.click();
+      a.remove();
     };
 
     card.appendChild(img);
