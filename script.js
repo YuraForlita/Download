@@ -2,14 +2,6 @@ const fetchBtn = document.getElementById("fetchBtn");
 const urlInput = document.getElementById("urlInput");
 const gallery = document.getElementById("gallery");
 
-// Поки фейкові фото — замість справжнього бекенду
-const mockImages = [
-  "https://via.placeholder.com/500x500.png?text=Фото+1",
-  "https://via.placeholder.com/400x300.png?text=Фото+2",
-  "https://via.placeholder.com/350x350.png?text=Фото+3",
-  "https://via.placeholder.com/600x400.png?text=Фото+4"
-];
-
 fetchBtn.addEventListener("click", async () => {
   const url = urlInput.value.trim();
   if (!url) return alert("Введіть посилання!");
@@ -54,12 +46,20 @@ function renderImages(images) {
     const downloadBtn = document.createElement("button");
     downloadBtn.textContent = "Скачати";
     downloadBtn.onclick = () => {
-      const a = document.createElement("a");
-      a.href = `/api/download?url=${encodeURIComponent(imgUrl)}`;
-      a.download = '';  // ім'я файлу сервер задасть
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      const downloadScript = `
+        <html>
+        <body>
+          <a id="a" href="${imgUrl}" download></a>
+          <script>
+            document.getElementById('a').click();
+            setTimeout(() => window.close(), 3000);
+          <\/script>
+        </body>
+        </html>
+      `;
+      const blob = new Blob([downloadScript], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
     };
 
     card.appendChild(img);
