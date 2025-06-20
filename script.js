@@ -46,21 +46,13 @@ function renderImages(images) {
     const downloadBtn = document.createElement("button");
     downloadBtn.textContent = "Скачати";
     downloadBtn.onclick = () => {
-      const downloadScript = `
-        <html>
-        <body>
-          <a id="a" href="${imgUrl}" download></a>
-          <script>
-            document.getElementById('a').click();
-            setTimeout(() => window.close(), 3000);
-          <\/script>
-        </body>
-        </html>
-      `;
-      const blob = new Blob([downloadScript], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    };
+    const a = document.createElement("a");
+    a.href = imgUrl;
+    a.download = ""; // браузер сам вибере назву
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
     card.appendChild(img);
     card.appendChild(downloadBtn);
